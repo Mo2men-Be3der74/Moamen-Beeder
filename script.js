@@ -39,22 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cross-browser scroll reveal fallback for browsers without animation-timeline support
-  const supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
-  if (!supportsScrollTimeline && 'IntersectionObserver' in window) {
-    const reveals = document.querySelectorAll('.reveal');
+  // Scroll Entrance Observer (threshold: 0.15, once: true)
+  if ('IntersectionObserver' in window) {
+    const animatedElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-stagger, .reveal-fade');
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-revealed');
-          obs.unobserve(entry.target);
+          obs.unobserve(entry.target); // once: true
         }
       });
     }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.15,
+      rootMargin: '0px'
     });
 
-    reveals.forEach(el => observer.observe(el));
+    animatedElements.forEach(el => observer.observe(el));
   }
 });
+

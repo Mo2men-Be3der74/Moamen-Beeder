@@ -271,37 +271,102 @@ body {
   transform: scale(1.05);
 }
 
-/* Animations */
+/* ==========================================================================
+   Scroll Entrance Animations (Motion/React specifications)
+   ========================================================================== */
+:root {
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-duration: 0.65s;
+}
+
+/* Directional Slide Entrances */
+.reveal-left {
+  opacity: 0;
+  transform: translate3d(-50px, 0, 0);
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+[dir="rtl"] .reveal-left,
+html[dir="rtl"] .reveal-left {
+  transform: translate3d(50px, 0, 0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translate3d(50px, 0, 0);
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+[dir="rtl"] .reveal-right,
+html[dir="rtl"] .reveal-right {
+  transform: translate3d(-50px, 0, 0);
+}
+
+/* Staggered Row / Card Entrance */
+.reveal-stagger {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+/* Text Element Fade-in */
+.reveal-fade {
+  opacity: 0;
+  transition: opacity var(--motion-duration) var(--motion-ease);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity;
+}
+
+/* Active State (Scrolled into view) */
+.reveal-left.is-revealed,
+.reveal-right.is-revealed,
+.reveal-stagger.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.reveal-fade.is-revealed {
+  opacity: 1;
+}
+
+/* Fallback legacy .reveal */
 .reveal {
-  animation: rise 0.7s both;
-  animation-timeline: view();
-  animation-range: entry 0% cover 22%;
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: opacity var(--motion-duration) var(--motion-ease),
+              transform var(--motion-duration) var(--motion-ease);
+  will-change: opacity, transform;
 }
 
 .reveal.is-revealed {
   opacity: 1;
-  transform: none;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  transform: translate3d(0, 0, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .reveal {
-    animation: none;
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-stagger,
+  .reveal-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
   * {
     transition: none !important;
   }
 }
+
